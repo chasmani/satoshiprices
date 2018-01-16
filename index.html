@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+
+<body>
+
+	<div class="container">
+
+
+		<div class="row header-row">
+
+			<div class="col-sm-12">
+				<h1>Satoshi Prices</h1>
+			</div>
+
+		</div>
+
+
+		<div class="row converter-row">
+
+		<div class="col-sm-6 currency1-container">
+			<span>
+				
+
+				 <select id="currency1-name">
+					 <option value="USD" selected>US Dollars (USD)</option>
+					 <option value="EUR">Euro (EUR)</option>
+					 <option value="GBP">Great British Pound (GBP)</option>
+				 </select>
+				
+				<input type="text" name="currency1" id="currency1-amount" value="1"> 
+
+
+			</span>
+
+		</div>
+
+		<div class="col-sm-6">
+			<span>
+
+				<select id="currency2-name">
+					 <option value="SAT" selected>Satoshi (SAT)</option>
+					 <option value="BTC">Bitcoin (BTC)</option>
+				 </select>
+
+				 <input type="text" name="currency2amount" id="currency2-amount">
+
+			</span>
+
+
+
+		</div>
+
+
+
+		</div>
+
+		<div class="row prices-row">
+
+			<div class="col-sm-6">
+
+				<h3>1 Satoshi = <span class="sat_USD"></span> USD</h3>
+				<h3>1000 Satoshi = <span class="1000sat_USD"></span> USD</h3>
+
+			</div>
+
+			<div class="col-sm-6">
+
+				<h3>1 BTC = <span class="BTC_sat"></span>100000000 Satoshi</h3>
+				<h3>1 USD = <span class="USD_sat"></span> Satoshi</h3>
+				<h3>1 EUR = <span class="EUR_sat"></span> Satoshi</h3>
+				<h3>1 GBP = <span class="GBP_sat"></span> Satoshi</h3>
+				<h3>1 JPY = <span class="JPY_sat"></span> Satoshi</h3>
+
+
+
+			</div>
+
+		</div>
+
+	</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
