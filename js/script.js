@@ -23,6 +23,13 @@ var BTCPRICES = {
 	"BTC":1
 }
 
+var CRYPTONAMES = [
+	"Satoshi (SAT)",
+	"Bitcoin (BTC)"
+]
+
+
+
 // Update the data stored locally from the cryptocompare API
 // Update the prices to the apge and the conversion tool
 function getPrices(){
@@ -34,6 +41,7 @@ function getPrices(){
 	    updatePrices();
 	    // Update the dropdown currency options
 	    updateDropdowns();
+	    updateAutocomplete();
 	    // Do an inital conversion for the default value in the left box
 	    calculateConversion("right");
 		});
@@ -62,6 +70,25 @@ function updateDropdowns(){
 	// Set the option back to what it was selected as
 	$("#currency2-name option[value=" + currency2Symbol).prop("selected", true);
 }
+
+
+function updateAutocomplete(){
+
+	CRYPTONAMES = []
+
+	for (key in CRYPTOCODES){
+		coinName =  CRYPTOCODES[key] + " (" + key + ")";
+		CRYPTONAMES.push(coinName);
+	}
+
+	$( "#currency1nameauto, #currency2nameauto" ).autocomplete({
+      source: CRYPTONAMES
+    });
+}
+
+
+
+
 
 // Update the prices on the page using the data stored locally
 function updatePrices(){
@@ -121,6 +148,9 @@ function calculateConversion(direction){
 }
 
 
+
+
+
 $(document).ready(getPrices);
 
 $("#currency2-amount").on("keyup", function(){
@@ -138,3 +168,36 @@ $("#currency1-amount").on("keyup", function(){
 $("#currency1-name").on("change", function(){
 	calculateConversion("left");
 })
+
+
+var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    
+$( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  
+
+
