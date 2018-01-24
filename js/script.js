@@ -7,14 +7,14 @@
 
 // Initial values for the currency codes
 var CRYPTOCODES = {
-	"US Dollar (USD)":"USD",
+	"US Dollar $ (USD)":"USD",
 	"Satoshi (SAT)":"SAT",
 	"Bitcoin (BTC)":"BTC", 
 	"Ethereum (ETH)":"ETH", 
 	"Litecoin (LTC)":"LTC",
-	"Great British Pound (GBP)":"GBP",
-	"Euro (EUR)":"EUR",
-	"Japanese Yen (JPY)":"JPY",
+	"Great British Pound £ (GBP)":"GBP",
+	"Euro € (EUR)":"EUR",
+	"Japanese Yen ¥ (JPY)":"JPY",
 	"Monero (XMR)":"XMR",
 }
 
