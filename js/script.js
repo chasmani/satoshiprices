@@ -111,14 +111,14 @@ function updateAutocomplete(){
 	// Create the autocompletes
 	$( "#currency1-name").autocomplete({
       source: CRYPTONAMES,
-      minLength: 0, // Change this if performance suffers once we have thousands of currencies
+      minLength: 2, // Change this if performance suffers once we have thousands of currencies
       close: function(ev,ui){
       	calculateConversion("left");
       }
     });
     $( "#currency2-name").autocomplete({
       source: CRYPTONAMES,
-      minLength: 0,
+      minLength: 2,
       close: function(ev,ui){
       	calculateConversion("right");
       }

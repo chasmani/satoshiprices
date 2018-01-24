@@ -1,30 +1,30 @@
 body {
-	background: #FCF141;
+	
 }
 
 
 h1,h2,h3,h4,h5,h6,p,input, * {
-	font-weight:700;
+	
 }
 
 .prices-row, .converter-row, .header-row {
 	padding-bottom:64px;
 }
 
-#currency1-amount, #currency1-name {
-	text-align:right;
-}
 
 .currency1-container:after {
 	content:"=";
 	position:absolute;
 	right:-10px;
-	top:36px;
+	top:72px;
 	
 	font-size:2.5rem;
 }
 
 input, select {
-	font-size:200%;
 	width:100%;
+}
+
+.currency-container {
+	padding:32px;
 }
