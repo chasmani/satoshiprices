@@ -14,7 +14,8 @@ var CRYPTOCODES = {
 	"Litecoin (LTC)":"LTC",
 	"Great British Pound (GBP)":"GBP",
 	"Euro (EUR)":"EUR",
-	"Japanese Yen (JPY)":"JPY"
+	"Japanese Yen (JPY)":"JPY",
+	"Monero (XMR)":"XMR",
 }
 
 // Initial values for price data
@@ -23,12 +24,18 @@ var BTCPRICES = {
 	"BTC":1
 }
 
-// Store autocomplet enames in it's own array, to improve performance
+// Keep track of coins treid. Some coins fail api call, so need to not call them again
+var CRYPTOCODESTRIED = [];
+// Cryptocompare API has a max length on the tsymb count
+var TSYMMAXLENGTH = 500;
+
+// Store autocomplete names in it's own array, to improve performance
 var CRYPTONAMES = []
 
+// initial request for coin data, to get the site working with main coins after 1 API call
 // Update the data stored locally from the cryptocompare API
-// Update the prices to the apge and the conversion tool
-function getPrices(){
+// Update the prices to the page and the conversion tool
+function getInitialPrices(){
 
 	$.getJSON("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR,GBP,JPY,ETH,LTC", function(data) {
 	    // Collect the data in the BTCPRICES variable
@@ -39,15 +46,69 @@ function getPrices(){
 	    updateAutocomplete();
 	    // Do an inital conversion for the default value in the left box
 	    calculateConversion("right");
+	    // Get all the other coins
+	    getCoins();
 		});
+}
+
+// Get any coin prices we don't have yet
+// Keeps sending API requests (recursive) until it has tried every coin we don't have prices for
+function getMorePrices(){
+
+	var tsymbString = ""
+
+	// Bulid the tsymb string based on what coins we want to get prices for
+	for (var key in CRYPTOCODES){
+		if((!BTCPRICES[CRYPTOCODES[key]])									// We don't have a price for it yet 
+			&&(tsymbString.length<(TSYMMAXLENGTH-10))						// tsymb string is not too long
+			&&($.inArray(CRYPTOCODES[key], CRYPTOCODESTRIED) == -1)){		// Not tried code in this run
+				tsymbString += (CRYPTOCODES[key] + ",");
+				CRYPTOCODESTRIED.push(CRYPTOCODES[key])	
+		}
+	}	
+	
+	// If the tsymbString length is zero, it means that we have tried all the coins, so stop
+	if(tsymbString.length>0){
+		apiRequestUrl = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=" + tsymbString
+		$.getJSON(apiRequestUrl, function(data) {
+		    // Collect the data in the BTCPRICES variable
+		    Object.assign(BTCPRICES, data);
+		    // Update the autocomplete options
+		    updateAutocomplete();
+		    // Get the next batch of price
+		    getMorePrices();
+			});
+	}
+}
+
+
+// Get list of coins on the cryptocompare api
+function getCoins(){
+
+	$.getJSON("https://min-api.cryptocompare.com/data/all/coinlist", function(data) {
+		// Update the CRYPTOCODES dictionary with the data from the API
+		for (var key in data["Data"]) {
+			CRYPTOCODES[data["Data"][key]["FullName"]] = data["Data"][key]["Symbol"];
+		}
+		updateAutocomplete();
+		// Start getting all the coin prices
+	    getMorePrices();
+	});
 }
 
 
 // Update the autocomplete using the CRYPTOCODES dictionary
 function updateAutocomplete(){
 
-	CRYPTONAMES = Object.keys(CRYPTOCODES);
-
+	// Get only the cryptocurrency names that we have a btc price for
+	var CRYPTONAMES = []
+	for (var key in CRYPTOCODES){
+		if(BTCPRICES[CRYPTOCODES[key]]){
+			CRYPTONAMES.push(key);
+		}
+	}
+	
+	// Create the autocompletes
 	$( "#currency1-name").autocomplete({
       source: CRYPTONAMES,
       minLength: 0, // Change this if performance suffers once we have thousands of currencies
@@ -127,7 +188,7 @@ function calculateConversion(direction){
 }
 
 
-$(document).ready(getPrices);
+$(document).ready(getInitialPrices);
 
 $("#currency2-amount").on("keyup", function(){
 	calculateConversion("left");
@@ -145,3 +206,35 @@ $("#currency1-name").on("keyup", function(){
 	calculateConversion("left");	
 })
 
+
+
+// To begin with, on page load, the user needs to be able to get basic info for the main coins as quickly as possible. So one API call for the top 50 coins.
+
+// Maybe also add an URL pattern to a coin to the initial api call, and also show this coin data as a priority. LATER
+
+// Once the intial prices are loaded, other data should eb updated in the background with as few API calls as possible. 
+
+// PRINCIPLE - The autocomplete boxes should always only show coins that we have the data for. 
+
+// So, what fi we had a few variable to ahdnle this:
+// CRYPTOPRICES[CODE] = PRICE_IN_BTC      	Prices of coins that we have
+// CRYPTOCODES[FUllName] = SYMBOL  			List of all names and the matching code
+// CRYPTONAMES = []							List of cryptonames for the autocomplete data. Only has names that we have price data for
+
+
+// This suggests several functions
+// updateAutocomplete() 					Iterate through CRYPTOCODES, check is SYMBOL has an entry in CRYPTOPRICEs. If it does, add to CRYPTONAMES
+
+
+
+// getMorePrices							Iterate through CRYPTOCODES, if symbol doesn't exist in CRYPTOPRICES, add to an url request. Once url gets to a certain length, send AJAX request
+// 											Might be worthwhile to somehow map or combine the dictionaries to get the list of symbols to add
+//											This can also be used to run the first api call, if the CRYPTOCODES data is onyl the mos important coins, then this will work. then add more codes once it's done 
+//											Q. how to get most popular coins?  Could hard code it into the script, but then what if a coin changes it's FullName? or changes it's symbol? Will we end up with two coins in the results?
+
+
+// ASSUMPTIONS - 
+// CRYPTOCOMPARE api won't mind me doing loads of requests
+// Can get all data without doing huge amount of api calls - what's the max character limit for prices? Do any coins fail? Character limit is 500. 
+// Having all the data will not signficantly slow down the app. Doesn;t seem to. Got 2064 
+// 
