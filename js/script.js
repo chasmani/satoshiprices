@@ -7,14 +7,14 @@
 
 // Initial values for the currency codes
 var CRYPTOCODES = {
-	"USD":"US Dollar",
-	"SAT":"Satoshi",
-	"BTC":"Bitcoin", 
-	"ETH":"Ethereum", 
-	"LTC":"Litecoin",
-	"GBP":"Great British Pound",
-	"EUR":"Euro",
-	"JPY":"Japanese Yen",
+	"US Dollar (USD)":"USD",
+	"Satoshi (SAT)":"SAT",
+	"Bitcoin (BTC)":"BTC", 
+	"Ethereum (ETH)":"ETH", 
+	"Litecoin (LTC)":"LTC",
+	"Great British Pound (GBP)":"GBP",
+	"Euro (EUR)":"EUR",
+	"Japanese Yen (JPY)":"JPY"
 }
 
 // Initial values for price data
@@ -23,12 +23,8 @@ var BTCPRICES = {
 	"BTC":1
 }
 
-var CRYPTONAMES = [
-	"Satoshi (SAT)",
-	"Bitcoin (BTC)"
-]
-
-
+// Store autocomplet enames in it's own array, to improve performance
+var CRYPTONAMES = []
 
 // Update the data stored locally from the cryptocompare API
 // Update the prices to the apge and the conversion tool
@@ -39,55 +35,34 @@ function getPrices(){
 	    Object.assign(BTCPRICES, data);
 	    // Update the prices to the website
 	    updatePrices();
-	    // Update the dropdown currency options
-	    updateDropdowns();
+	    // Update the autocomplete options
 	    updateAutocomplete();
 	    // Do an inital conversion for the default value in the left box
 	    calculateConversion("right");
 		});
 }
 
-// This should be replaced with an autofill function and user input box
-function updateDropdowns(){
 
-	// Get current selections
-	var currency1Symbol = $("#currency1-name option:selected").val();
-	var currency2Symbol = $("#currency2-name option:selected").val();	
-
-	// Repopulate the list
-	$("#currency1-name").html("");
-	$("#currency2-name").html("");
-	optionsHtml = ""
-	for (key in CRYPTOCODES){
-		console.log(key);
-		optionsHtml += '<option value="' + key + '">' + CRYPTOCODES[key] + ' (' + key +')</option>';
-	} 
-	$("#currency1-name").html(optionsHtml);
-	$("#currency2-name").html(optionsHtml);
-
-	// Set the option back to what it was selected as
-	$("#currency1-name option[value=" + currency1Symbol).attr("selected", true);
-	// Set the option back to what it was selected as
-	$("#currency2-name option[value=" + currency2Symbol).prop("selected", true);
-}
-
-
+// Update the autocomplete using the CRYPTOCODES dictionary
 function updateAutocomplete(){
 
-	CRYPTONAMES = []
+	CRYPTONAMES = Object.keys(CRYPTOCODES);
 
-	for (key in CRYPTOCODES){
-		coinName =  CRYPTOCODES[key] + " (" + key + ")";
-		CRYPTONAMES.push(coinName);
-	}
-
-	$( "#currency1nameauto, #currency2nameauto" ).autocomplete({
-      source: CRYPTONAMES
+	$( "#currency1-name").autocomplete({
+      source: CRYPTONAMES,
+      minLength: 0, // Change this if performance suffers once we have thousands of currencies
+      close: function(ev,ui){
+      	calculateConversion("left");
+      }
+    });
+    $( "#currency2-name").autocomplete({
+      source: CRYPTONAMES,
+      minLength: 0,
+      close: function(ev,ui){
+      	calculateConversion("right");
+      }
     });
 }
-
-
-
 
 
 // Update the prices on the page using the data stored locally
@@ -116,7 +91,7 @@ function updatePrices(){
     $(".JPY_sat").html(convertNumber(1/satPriceJPY));
 }
 
-// Helper function ro convert numbers into readable format
+// Helper function to convert numbers into readable format
 function convertNumber(number){
 	return parseFloat(number.toPrecision(4))
 }
@@ -124,31 +99,32 @@ function convertNumber(number){
 // Left direction calculates the left currency value based on the right selection
 function calculateConversion(direction){
 
-	// Get all the current variables from the form
-	var currency1Symbol = $("#currency1-name option:selected").val();
-	var currency1Amount = $("#currency1-amount").val();
-	var currency2Symbol = $("#currency2-name option:selected").val();
-	var currency2Amount = $("#currency2-amount").val();
+	// Get the coin symbols from the input field and CRYPTOCODES dictionary
+	var currency1Symbol = CRYPTOCODES[$("#currency1-name").val()]
+	var currency2Symbol = CRYPTOCODES[$("#currency2-name").val()]
 
-	if (direction=="left"){
-		// Work out the value in BTC
-		var amountBTC = currency2Amount/BTCPRICES[currency2Symbol];	
-		// Convert to needed currency
-		var currency1Amount = amountBTC * BTCPRICES[currency1Symbol];
-		// Populate in form
+	if(currency1Symbol&&currency2Symbol){
+		console.log("Got valid symbols")
+		var currency1Amount = $("#currency1-amount").val();
+		var currency2Amount = $("#currency2-amount").val();
+	
+		if (direction=="left"){
+			// Work out the value in BTC
+			var amountBTC = currency2Amount/BTCPRICES[currency2Symbol];	
+			// Convert to needed currency
+			var currency1Amount = amountBTC * BTCPRICES[currency1Symbol];
+			// Populate in form
 		$("#currency1-amount").val(convertNumber(currency1Amount));
-	} else if (direction=="right"){
-		// Work out the value in BTC
-		var amountBTC = currency1Amount/BTCPRICES[currency1Symbol];	
-		// Convert to needed currency
-		var currency2Amount = amountBTC * BTCPRICES[currency2Symbol];
-		// Populate in form
-		$("#currency2-amount").val(convertNumber(currency2Amount));
+		} else if (direction=="right"){
+			// Work out the value in BTC
+			var amountBTC = currency1Amount/BTCPRICES[currency1Symbol];	
+			// Convert to needed currency
+			var currency2Amount = amountBTC * BTCPRICES[currency2Symbol];
+			// Populate in form
+			$("#currency2-amount").val(convertNumber(currency2Amount));
+		}
 	}
 }
-
-
-
 
 
 $(document).ready(getPrices);
@@ -157,47 +133,15 @@ $("#currency2-amount").on("keyup", function(){
 	calculateConversion("left");
 })
 
-$("#currency2-name").on("change", function(){
-	calculateConversion("right");
+$("#currency2-name").on("keyup", function(){
+	calculateConversion("right");	
 })
 
 $("#currency1-amount").on("keyup", function(){
 	calculateConversion("right");
 })
 
-$("#currency1-name").on("change", function(){
-	calculateConversion("left");
+$("#currency1-name").on("keyup", function(){
+	calculateConversion("left");	
 })
-
-
-var availableTags = [
-      "ActionScript",
-      "AppleScript",
-      "Asp",
-      "BASIC",
-      "C",
-      "C++",
-      "Clojure",
-      "COBOL",
-      "ColdFusion",
-      "Erlang",
-      "Fortran",
-      "Groovy",
-      "Haskell",
-      "Java",
-      "JavaScript",
-      "Lisp",
-      "Perl",
-      "PHP",
-      "Python",
-      "Ruby",
-      "Scala",
-      "Scheme"
-    ];
-    
-$( "#tags" ).autocomplete({
-      source: availableTags
-    });
-  
-
 
