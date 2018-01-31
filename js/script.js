@@ -16,6 +16,8 @@ var CRYPTOCODES = {
 	"Euro € (EUR)":"EUR",
 	"Japanese Yen ¥ (JPY)":"JPY",
 	"Monero (XMR)":"XMR",
+	"South Korean Won (KRW)":"KRW",
+	"Indian Rupee (INR)":"INR",
 }
 
 // Initial values for price data
@@ -32,12 +34,14 @@ var TSYMMAXLENGTH = 500;
 // Store autocomplete names in it's own array, to improve performance
 var CRYPTONAMES = []
 
+var TOPCOINS = ["ETH","BCH","XRP","ICX","LSK","XLM","LTC","EOS","NEO","TRX","ELF","ETC","VEN","ADA","DASH","XMR","ZEC","IOST","HSR","QTUM","WAVES","OMG","XVG","NBT","BNB","SC","CND","IOT","BTG","GAS","PPT","STEEM","XEM","KNC","STRAT","WTC","DGD","ADX","ZCL","XDN","ZRX","DGB","BTS","SWFTC","REQ","SNT","DOGE","BRD","SUB","POE","ARDR","BAT","XRB"]
+
 // initial request for coin data, to get the site working with main coins after 1 API call
 // Update the data stored locally from the cryptocompare API
 // Update the prices to the page and the conversion tool
 function getInitialPrices(){
 
-	$.getJSON("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR,GBP,JPY,ETH,LTC", function(data) {
+	$.getJSON("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR,GBP,JPY,KRW,INR,ETH,LTC", function(data) {
 	    // Collect the data in the BTCPRICES variable
 	    Object.assign(BTCPRICES, data);
 	    // Update the prices to the website
@@ -86,22 +90,49 @@ function getMorePrices(){
 function getCoins(){
 
 	$.getJSON("https://min-api.cryptocompare.com/data/all/coinlist", function(data) {
+
 		// Update the CRYPTOCODES dictionary with the data from the API
 		for (var key in data["Data"]) {
-			CRYPTOCODES[data["Data"][key]["FullName"]] = data["Data"][key]["Symbol"];
+			if($.inArray(data["Data"][key]["Symbol"], TOPCOINS) != -1){
+				CRYPTOCODES[data["Data"][key]["FullName"]] = data["Data"][key]["Symbol"];	
+			}
 		}
-		updateAutocomplete();
+
+		updateDropdowns();
 		// Start getting all the coin prices
 	    getMorePrices();
 	});
 }
+
+// Update the currency dropdown list
+function updateDropdowns(){
+ 
+	var currency1Symbol = $("#currency1-name option:selected").val();
+	var currency2Symbol = $("#currency2-name option:selected").val();
+	
+	$("#currency1-name").html("");
+	$("#currency2-name").html("");
+	optionsHtml = ""
+	var sortedKeys = Object.keys(CRYPTOCODES).sort();
+	for(var i=0;i<sortedKeys.length;i++){
+		optionsHtml += '<option value="' + CRYPTOCODES[sortedKeys[i]] + '">' + sortedKeys[i] + '</option>';
+	}
+
+ 	$("#currency1-name").html(optionsHtml);
+ 	$("#currency2-name").html(optionsHtml);
+
+ 	// Set the option back to what it was selected as
+ 	$("#currency1-name option[value=" + currency1Symbol).attr("selected", true);
+ 	$("#currency2-name option[value=" + currency2Symbol).attr("selected", true);
+ }
 
 
 // Update the autocomplete using the CRYPTOCODES dictionary
 function updateAutocomplete(){
 
 	// Get only the cryptocurrency names that we have a btc price for
-	var CRYPTONAMES = []
+	CRYPTONAMES = []
+
 	for (var key in CRYPTOCODES){
 		if(BTCPRICES[CRYPTOCODES[key]]){
 			CRYPTONAMES.push(key);
@@ -161,8 +192,8 @@ function convertNumber(number){
 function calculateConversion(direction){
 
 	// Get the coin symbols from the input field and CRYPTOCODES dictionary
-	var currency1Symbol = CRYPTOCODES[$("#currency1-name").val()]
-	var currency2Symbol = CRYPTOCODES[$("#currency2-name").val()]
+	var currency1Symbol = $("#currency1-name").val()
+	var currency2Symbol = $("#currency2-name").val()
 
 	if(currency1Symbol&&currency2Symbol){
 		console.log("Got valid symbols")
@@ -194,7 +225,7 @@ $("#currency2-amount").on("keyup", function(){
 	calculateConversion("left");
 })
 
-$("#currency2-name").on("keyup", function(){
+$("#currency2-name").on("change", function(){
 	calculateConversion("right");	
 })
 
@@ -202,7 +233,7 @@ $("#currency1-amount").on("keyup", function(){
 	calculateConversion("right");
 })
 
-$("#currency1-name").on("keyup", function(){
+$("#currency1-name").on("change", function(){
 	calculateConversion("left");	
 })
 

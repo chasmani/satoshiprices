@@ -12,19 +12,10 @@ h1,h2,h3,h4,h5,h6,p,input, * {
 }
 
 
-.currency1-container:after {
-	content:"=";
-	position:absolute;
-	right:-10px;
-	top:72px;
-	
-	font-size:2.5rem;
-}
-
-input, select {
-	width:100%;
-}
-
 .currency-container {
 	padding:32px;
+}
+
+.amount-input {
+	max-width:150px;
 }
