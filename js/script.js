@@ -170,17 +170,15 @@ function updateSummary(){
 
 }
 
+// Update the time that prices were last checked 
 function updateTime(){
-
 
 	var ts = new Date()
 	$(".updated-time").html(ts.toLocaleTimeString());
 
+	$(".loading-prices").addClass("hidden");
 	$(".time-summary").removeClass("hidden");
-
 }
-
-
 
 // Update the prices on the page using the data stored locally
 function updatePrices(){
@@ -210,9 +208,7 @@ function updatePrices(){
 
 // Helper function to convert numbers into readable format
 function convertNumber(number){
-	console.log(number)
-	console.log(typeof(number))
-	return parseFloat(number.toPrecision(4)).toString()
+	return parseFloat(number.toPrecision(4))
 }
 
 // Left direction calculates the left currency value based on the right selection
@@ -222,43 +218,38 @@ function calculateConversion(direction){
 	var currency1Symbol = $("#currency1-name").val()
 	var currency2Symbol = $("#currency2-name").val()
 
+	// Check symbols both exist (more of an issue with autocorrect version)
 	if(currency1Symbol&&currency2Symbol){
-		console.log("Got valid symbols")
 		var currency1Amount = $("#currency1-amount").val();
-		var currency2Amount = $("#currency2-amount").val();
-		
+		var currency2Amount = $("#currency2-amount").val();	
 
+		// Direction left is calculating currency 1 from currency 2
 		if (direction=="left"){
 
-			if((currency2Amount!="")){
+			if((currency2Amount!="")){ // This will also catch if the user input an invalid number
 				// Work out the value in BTC
 				var amountBTC = currency2Amount/BTCPRICES[currency2Symbol];	
 				// Convert to needed currency
 				var currency1Amount = amountBTC * BTCPRICES[currency1Symbol];
 				// Populate in form
-
 				$("#currency1-amount").val(convertNumber(currency1Amount));	
+				// Update the summary text
 				updateSummary();
-			}
-
-			
+			}	
+		// Direction right is calculating currency 2 from currency 1
 		} else if (direction=="right"){
-			if(currency1Amount!=""){
+			if(currency1Amount!=""){ // This will also catch if the user input an invalid number
 				// Work out the value in BTC
 				var amountBTC = currency1Amount/BTCPRICES[currency1Symbol];	
 				// Convert to needed currency
 				var currency2Amount = amountBTC * BTCPRICES[currency2Symbol];
-				// Populate in form
-				
-
+				// Populate in form				
 				$("#currency2-amount").val(convertNumber(currency2Amount));
+				// Update the summary text
 				updateSummary();
 			}
 		}
-
 	}
-
-	
 }
 
 
@@ -281,34 +272,3 @@ $("#currency1-name").on("change", function(){
 })
 
 
-
-// To begin with, on page load, the user needs to be able to get basic info for the main coins as quickly as possible. So one API call for the top 50 coins.
-
-// Maybe also add an URL pattern to a coin to the initial api call, and also show this coin data as a priority. LATER
-
-// Once the intial prices are loaded, other data should eb updated in the background with as few API calls as possible. 
-
-// PRINCIPLE - The autocomplete boxes should always only show coins that we have the data for. 
-
-// So, what fi we had a few variable to ahdnle this:
-// CRYPTOPRICES[CODE] = PRICE_IN_BTC      	Prices of coins that we have
-// CRYPTOCODES[FUllName] = SYMBOL  			List of all names and the matching code
-// CRYPTONAMES = []							List of cryptonames for the autocomplete data. Only has names that we have price data for
-
-
-// This suggests several functions
-// updateAutocomplete() 					Iterate through CRYPTOCODES, check is SYMBOL has an entry in CRYPTOPRICEs. If it does, add to CRYPTONAMES
-
-
-
-// getMorePrices							Iterate through CRYPTOCODES, if symbol doesn't exist in CRYPTOPRICES, add to an url request. Once url gets to a certain length, send AJAX request
-// 											Might be worthwhile to somehow map or combine the dictionaries to get the list of symbols to add
-//											This can also be used to run the first api call, if the CRYPTOCODES data is onyl the mos important coins, then this will work. then add more codes once it's done 
-//											Q. how to get most popular coins?  Could hard code it into the script, but then what if a coin changes it's FullName? or changes it's symbol? Will we end up with two coins in the results?
-
-
-// ASSUMPTIONS - 
-// CRYPTOCOMPARE api won't mind me doing loads of requests
-// Can get all data without doing huge amount of api calls - what's the max character limit for prices? Do any coins fail? Character limit is 500. 
-// Having all the data will not signficantly slow down the app. Doesn;t seem to. Got 2064 
-// 

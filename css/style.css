@@ -1,10 +1,10 @@
-body {
-	
-}
-
-
 .hidden {
 	display:none;
+}
+
+.row {
+	padding-bottom:32px;
+	padding-top:32px;
 }
 
 /*
@@ -30,18 +30,19 @@ input:invalid{
 	box-shadow:none;
 }
 
-
-h2,h4 {
-	width:100%;
-	
-}
-
-.row {
-	padding-bottom:32px;
-	padding-top:32px;
+input,select {
+	height:100%;
 }
 
 
 .amount-input {
 	max-width:150px;
+}
+
+/*
+Summary
+*/
+
+h2,h4 {
+	width:100%;	
 }
