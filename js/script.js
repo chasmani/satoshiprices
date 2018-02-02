@@ -210,7 +210,9 @@ function updatePrices(){
 
 // Helper function to convert numbers into readable format
 function convertNumber(number){
-	return parseFloat(number.toPrecision(4))
+	console.log(number)
+	console.log(typeof(number))
+	return parseFloat(number.toPrecision(4)).toString()
 }
 
 // Left direction calculates the left currency value based on the right selection
@@ -224,25 +226,39 @@ function calculateConversion(direction){
 		console.log("Got valid symbols")
 		var currency1Amount = $("#currency1-amount").val();
 		var currency2Amount = $("#currency2-amount").val();
-	
+		
+
 		if (direction=="left"){
-			// Work out the value in BTC
-			var amountBTC = currency2Amount/BTCPRICES[currency2Symbol];	
-			// Convert to needed currency
-			var currency1Amount = amountBTC * BTCPRICES[currency1Symbol];
-			// Populate in form
-		$("#currency1-amount").val(convertNumber(currency1Amount));
+
+			if((currency2Amount!="")){
+				// Work out the value in BTC
+				var amountBTC = currency2Amount/BTCPRICES[currency2Symbol];	
+				// Convert to needed currency
+				var currency1Amount = amountBTC * BTCPRICES[currency1Symbol];
+				// Populate in form
+
+				$("#currency1-amount").val(convertNumber(currency1Amount));	
+				updateSummary();
+			}
+
+			
 		} else if (direction=="right"){
-			// Work out the value in BTC
-			var amountBTC = currency1Amount/BTCPRICES[currency1Symbol];	
-			// Convert to needed currency
-			var currency2Amount = amountBTC * BTCPRICES[currency2Symbol];
-			// Populate in form
-			$("#currency2-amount").val(convertNumber(currency2Amount));
+			if(currency1Amount!=""){
+				// Work out the value in BTC
+				var amountBTC = currency1Amount/BTCPRICES[currency1Symbol];	
+				// Convert to needed currency
+				var currency2Amount = amountBTC * BTCPRICES[currency2Symbol];
+				// Populate in form
+				
+
+				$("#currency2-amount").val(convertNumber(currency2Amount));
+				updateSummary();
+			}
 		}
+
 	}
 
-	updateSummary();
+	
 }
 
 

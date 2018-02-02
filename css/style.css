@@ -25,6 +25,11 @@ CONVERSION FORM
 	max-width:50%;
 }
 
+input:required,
+input:invalid{
+	box-shadow:none;
+}
+
 
 h2,h4 {
 	width:100%;
