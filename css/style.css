@@ -3,18 +3,39 @@ body {
 }
 
 
-h1,h2,h3,h4,h5,h6,p,input, * {
+.hidden {
+	display:none;
+}
+
+/*
+HEADER
+*/
+
+.header-row {
+	text-align:center;
+}
+
+
+/*
+CONVERSION FORM
+*/
+
+.switch img{
+	max-height:50%;
+	max-width:50%;
+}
+
+
+h2,h4 {
+	width:100%;
 	
 }
 
-.prices-row, .converter-row, .header-row {
-	padding-bottom:64px;
+.row {
+	padding-bottom:32px;
+	padding-top:32px;
 }
 
-
-.currency-container {
-	padding:32px;
-}
 
 .amount-input {
 	max-width:150px;

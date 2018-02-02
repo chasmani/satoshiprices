@@ -50,6 +50,8 @@ function getInitialPrices(){
 	    updateAutocomplete();
 	    // Do an inital conversion for the default value in the left box
 	    calculateConversion("right");
+	    updateSummary();
+	    updateTime();
 	    // Get all the other coins
 	    getCoins();
 		});
@@ -156,6 +158,29 @@ function updateAutocomplete(){
     });
 }
 
+// Update the summary of the conversion as the user types
+function updateSummary(){
+
+
+
+	$(".summary-currency1-amount").html($("#currency1-amount").val());
+	$(".summary-currency1-name").html($("#currency1-name option:selected").text() + " is");
+	$(".summary-currency2-amount").html($("#currency2-amount").val());
+	$(".summary-currency2-name").html($("#currency2-name option:selected").text());
+
+}
+
+function updateTime(){
+
+
+	var ts = new Date()
+	$(".updated-time").html(ts.toLocaleTimeString());
+
+	$(".time-summary").removeClass("hidden");
+
+}
+
+
 
 // Update the prices on the page using the data stored locally
 function updatePrices(){
@@ -216,6 +241,8 @@ function calculateConversion(direction){
 			$("#currency2-amount").val(convertNumber(currency2Amount));
 		}
 	}
+
+	updateSummary();
 }
 
 
