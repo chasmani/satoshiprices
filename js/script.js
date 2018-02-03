@@ -160,6 +160,13 @@ function updateAutocomplete(){
 
 // Update the summary of the conversion as the user types
 function updateSummary(){
+
+	// Summary of the exchange symbols in the header
+	$(".summary-currency1-symbol").html($("#currency1-name option:selected").val())
+	$(".summary-currency2-symbol").html($("#currency2-name option:selected").val())
+
+
+	// Main summary of the calculated conversion
 	$(".summary-currency1-amount").html($("#currency1-amount").val());
 	$(".summary-currency1-name").html($("#currency1-name option:selected").text() + " is");
 	$(".summary-currency2-amount").html($("#currency2-amount").val());

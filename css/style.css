@@ -3,22 +3,53 @@
 }
 
 .row {
-	padding-bottom:32px;
-	padding-top:32px;
+	padding:16px;
 }
+
+/*
+TYPOGRAPHY
+*/
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: 'Lato', sans-serif;
+}
+
 
 /*
 HEADER
 */
 
-.header-row {
+header.row {
+	background:#37517e;
+	padding:16px;
+	color:#fff;
+	
+}
+
+header h3 {
+	
+	font-weight:100;
+}
+
+/*
+CTA
+*/
+
+.cta-row {
+	background:#37517e;
 	text-align:center;
+	color:#fff;
+	padding-top:0;
 }
 
 
 /*
 CONVERSION FORM
 */
+
+.form-row {
+	padding-top:32px;
+}
 
 .switch img{
 	max-height:50%;
@@ -31,7 +62,7 @@ input:invalid{
 }
 
 input,select {
-	height:100%;
+	min-height:34px;
 }
 
 
