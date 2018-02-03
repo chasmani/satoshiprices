@@ -81,6 +81,7 @@ function getMorePrices(){
 		    Object.assign(BTCPRICES, data);
 		    // Update the autocomplete options
 		    updateAutocomplete();
+		    updatePrices();
 		    // Get the next batch of price
 		    getMorePrices();
 			});
@@ -186,6 +187,14 @@ function updateTime(){
 // Update the prices on the page using the data stored locally
 function updatePrices(){
 
+	console.log("Updating prices")
+
+	$(".BTC_USD").html(BTCPRICES["USD"])
+	$(".ETH_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["ETH"]))
+	$(".XRP_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["XRP"]))
+	$(".BCH_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["BCH"]))
+
+	/*
 	// USD
     var satPriceUSD = BTCPRICES["USD"]/BTCPRICES["SAT"];
     $(".sat_USD").html(convertNumber(satPriceUSD));
@@ -207,6 +216,7 @@ function updatePrices(){
     // JPY
     var satPriceJPY = BTCPRICES["JPY"]/BTCPRICES["SAT"];
     $(".JPY_sat").html(convertNumber(1/satPriceJPY));
+	*/
 }
 
 // Helper function to convert numbers into readable format

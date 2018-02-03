@@ -19,8 +19,12 @@ h1,h2,h3,h4,h5,h6 {
 HEADER
 */
 
+.header-container {
+	background:#4B77BE;
+}
+
 header.row {
-	background:#37517e;
+	
 	padding:16px;
 	color:#fff;
 	
@@ -36,7 +40,6 @@ CTA
 */
 
 .cta-row {
-	background:#37517e;
 	text-align:center;
 	color:#fff;
 	padding-top:0;
@@ -76,4 +79,30 @@ Summary
 
 h2,h4 {
 	width:100%;	
+}
+
+/*
+TABLES
+*/
+
+table {
+	width:100%;
+	border-radius:5px;
+}
+
+th {
+	
+	color:#fff;
+}
+
+.table-1 {
+	background:#4DAF7C;
+}
+
+.table-2 {
+	background:#E08A1E;
+}
+
+.table-3 {
+	background:#C93756;
 }
