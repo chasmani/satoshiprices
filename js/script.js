@@ -160,14 +160,10 @@ function updateAutocomplete(){
 
 // Update the summary of the conversion as the user types
 function updateSummary(){
-
-
-
 	$(".summary-currency1-amount").html($("#currency1-amount").val());
 	$(".summary-currency1-name").html($("#currency1-name option:selected").text() + " is");
 	$(".summary-currency2-amount").html($("#currency2-amount").val());
 	$(".summary-currency2-name").html($("#currency2-name option:selected").text());
-
 }
 
 // Update the time that prices were last checked 
