@@ -46,6 +46,7 @@ function getInitialPrices(){
 	    Object.assign(BTCPRICES, data);
 	    // Update the prices to the website
 	    updatePrices();
+	    updateTables();
 	    // Update the autocomplete options
 	    updateAutocomplete();
 	    // Do an inital conversion for the default value in the left box
@@ -82,6 +83,7 @@ function getMorePrices(){
 		    // Update the autocomplete options
 		    updateAutocomplete();
 		    updatePrices();
+		    updateTables();
 		    // Get the next batch of price
 		    getMorePrices();
 			});
@@ -172,7 +174,16 @@ function updateSummary(){
 	$(".summary-currency1-name").html($("#currency1-name option:selected").text() + " is");
 	$(".summary-currency2-amount").html($("#currency2-amount").val());
 	$(".summary-currency2-name").html($("#currency2-name option:selected").text());
+
+
+	// Update table categories
+	$(".table-2").data("table-symbol", $("#currency1-name option:selected").val()) 
+	$(".table-3").data("table-symbol", $("#currency2-name option:selected").val()) 
+
+	updateTables();
+
 }
+
 
 // Update the time that prices were last checked 
 function updateTime(){
@@ -193,6 +204,11 @@ function updatePrices(){
 	$(".ETH_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["ETH"]))
 	$(".XRP_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["XRP"]))
 	$(".BCH_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["BCH"]))
+	$(".ADA_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["ADA"]))
+	$(".LTC_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["LTC"]))
+	$(".NEO_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["NEO"]))
+	$(".XLM_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["XLM"]))
+
 
 	/*
 	// USD
@@ -217,6 +233,51 @@ function updatePrices(){
     var satPriceJPY = BTCPRICES["JPY"]/BTCPRICES["SAT"];
     $(".JPY_sat").html(convertNumber(1/satPriceJPY));
 	*/
+}
+
+
+function updateTables(){
+
+
+	console.log("Hello");
+	console.log($("table th").data("table-symbol"));
+
+	$.each($("table"), function(){
+		console.log("Hello");
+		fromSymbol = $(this).find("th").data("table-symbol");
+		console.log(fromSymbol);
+		if(fromSymbol){
+
+
+			// Update the table name
+			$(this).find("th").html(fromSymbol);
+
+			// For each row
+			$.each($(this).find("tr"), function(){
+
+				toSymbol = $(this).data("to-symbol");
+				console.log(toSymbol);
+
+				if(toSymbol){
+
+					// Update the first table cell
+
+					$(this).find("td:first").html("1 " + fromSymbol)
+
+					$(this).find("td:last").html(convertNumber(BTCPRICES[toSymbol]/BTCPRICES[fromSymbol]) + " " + toSymbol)
+
+
+				}
+
+
+			})
+
+
+
+		}
+	});
+
+
 }
 
 // Helper function to convert numbers into readable format
