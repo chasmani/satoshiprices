@@ -209,6 +209,7 @@ function updatePrices(){
 	$(".NEO_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["NEO"]))
 	$(".XLM_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["XLM"]))
 
+	$(".table-1").removeClass("hidden");
 
 	/*
 	// USD
@@ -275,6 +276,9 @@ function updateTables(){
 
 
 		}
+
+		$(this).removeClass("hidden");
+
 	});
 
 
