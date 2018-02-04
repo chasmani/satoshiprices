@@ -326,7 +326,7 @@ function calculateConversion(direction){
 
 $(document).ready(getInitialPrices);
 
-$("#currency2-amount").on("keyup", function(){
+$("#currency2-amount").on("keyup change", function(){
 	calculateConversion("left");
 })
 
@@ -334,7 +334,7 @@ $("#currency2-name").on("change", function(){
 	calculateConversion("right");	
 })
 
-$("#currency1-amount").on("keyup", function(){
+$("#currency1-amount").on("keyup change", function(){
 	calculateConversion("right");
 })
 
