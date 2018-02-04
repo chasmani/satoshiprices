@@ -198,8 +198,6 @@ function updateTime(){
 // Update the prices on the page using the data stored locally
 function updatePrices(){
 
-	console.log("Updating prices")
-
 	$(".BTC_USD").html(BTCPRICES["USD"])
 	$(".ETH_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["ETH"]))
 	$(".XRP_USD").html(convertNumber(BTCPRICES["USD"]/BTCPRICES["XRP"]))
@@ -236,17 +234,12 @@ function updatePrices(){
 	*/
 }
 
-
+// Update the tables dynamically
 function updateTables(){
 
-
-	console.log("Hello");
-	console.log($("table th").data("table-symbol"));
-
 	$.each($("table"), function(){
-		console.log("Hello");
+		
 		fromSymbol = $(this).find("th").data("table-symbol");
-		console.log(fromSymbol);
 		if(fromSymbol){
 
 
