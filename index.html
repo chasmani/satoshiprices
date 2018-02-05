@@ -42,10 +42,11 @@
 
 		<div class="row form-row">
 
-			<form onsubmit="myFunction(); return false;">
+			
 
 		
 			<div class="col-12 col-lg-5">
+					<form onsubmit="myFunction(); return false;">
 					<input type="number" class="amount-input" id="currency1-amount" value="1"> 
 					<select id="currency1-name">
 					 <option value="USD">US Dollars (USD)</option>
@@ -53,6 +54,7 @@
 					 <option value="GBP">Great British Pound (GBP)</option>
  					<option value="BTC" selected>Bitcoin (BTC)</option>
 				 	</select>
+				 	</form>
 				
 			</div>
 		
@@ -62,7 +64,7 @@
 			</div>
 
 			<div class="col-12 col-lg-5">
-				
+					<form onsubmit="myFunction(); return false;">
 					<input type="number" id="currency2-amount" class="amount-input"> 
 				
 					<select id="currency2-name">
@@ -71,11 +73,9 @@
 					 <option value="GBP">Great British Pound (GBP)</option>
 					 <option value="BTC">Bitcoin (BTC)</option>
 				 	</select>
-				
+					</form>
 			</div>
 
-			<input type="submit" value="Submit" class="hidden">
-			</form>
 
 
 		</div>
