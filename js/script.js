@@ -323,6 +323,13 @@ function calculateConversion(direction){
 	}
 }
 
+$("#currency2-amount, #currency1-amount").on("keypress", function(event){
+	if (event.keyCode == 13) {
+            event.preventDefault();
+            event.target.blur()
+        }
+})
+
 
 $(document).ready(getInitialPrices);
 
